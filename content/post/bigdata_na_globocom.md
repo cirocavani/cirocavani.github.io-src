@@ -254,11 +254,6 @@ Eu gostaria de pensar no futuro, e nesse sentido, a minha expectativa é que a g
 
 A gente vem de um modelo em que um mesmo time faz o desenvolvimento do Sistema de Recomendação, coleta e processamento de dados, a análise e construção de modelos, e a gestão da Plataforma de BigData. A proposta é expandir cada uma dessas responsabilidade em times próprios e adicionar outros com foco em suportar novas demandas. É nesse processo que nos encontramos nesse momento.
 
-Temos vagas na Área de BigData da  Globo.com:<br/>
-(procure as vagas com BigData no título)
-
-http://talentos.globo.com/
-
 ...
 
 Meu interesse pessoal é Inteligência Artificial e, alinhado com os avanços que vem sendo feitos na área, BigData é muito importante para o desenvolvimento dos modelos que estão produzindo os melhores resultados. De outra forma, também é válido dizer que a construção de agentes inteligentes é uma forma de tornar tratável uma quantidade muito grande de dados. Por uma formulação ou por outra, a ideia comum é que BigData e Inteligência Artificial tem uma intersecção importante.
