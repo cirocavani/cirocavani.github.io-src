@@ -1,6 +1,6 @@
 +++
 date = "2016-08-22T22:00:00-03:00"
-draft = true
+draft = false
 slug = "tensorflow-integracao-bigdata"
 tags = ["TensorFlow", "BigData", "Hadoop"]
 title = "TensorFlow: Integração com BigData"
