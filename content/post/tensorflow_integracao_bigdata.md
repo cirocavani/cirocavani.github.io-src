@@ -120,7 +120,7 @@ Os dois últimos releases do TensorFlow foram bastante interessantes:
 
 ### Experiência com TensorFlow
 
-Já há algum tempo, venho trabalhando com o TensorFlow (nos últimos 3 hackdays na Globo.com, quase 9 meses). Recentemente, o Google divulgou um paper em que eles elaboram como usam o TensorFlow para fazer recomendação de apps no Google Play. Essa se tornou a oportunidade que eu encontrei para começar a trazer para a Globo.com a base para crescermos na área de AI.
+Já há algum tempo, venho trabalhando esporadicamente com o TensorFlow (nos últimos 3 hackdays na Globo.com, quase 9 meses). Recentemente, o Google divulgou um paper em que eles elaboram como usam o TensorFlow para fazer recomendação de apps no Google Play. Essa se tornou a oportunidade que eu encontrei para começar a trazer para a Globo.com a base para crescermos na área de AI.
 
 > **Wide & Deep Learning: Better Together with TensorFlow**
 >
@@ -382,4 +382,4 @@ Para trabalhos futuros, esses são alguns dos desafios:
 
 ...
 
-Em um próximo artigo, pretendo discutir um Aplicação TensorFlow para Recomendação.
+Em um próximo artigo, pretendo discutir uma Aplicação TensorFlow para Recomendação.
