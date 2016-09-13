@@ -2,7 +2,7 @@
 date = "2015-08-31T22:45:23-03:00"
 draft = false
 slug = "compilacao-do-hadoop-para-centos6-rhel6-usando-docker"
-tags = ["Tutorial", "Hadoop", "Docker", "CentOS6", "RHEL6"]
+tags = ["Hadoop", "CentOS6", "RHEL6", "Docker", "Tutorial"]
 title = "Compilação do Hadoop para CentOS6 / RHEL6 usando Docker"
 +++
 

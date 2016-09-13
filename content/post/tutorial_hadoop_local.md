@@ -2,7 +2,7 @@
 date = "2015-09-16T23:26:07-03:00"
 draft = false
 slug = "configuracao-do-hadoop-hbase-e-kafka-na-maquina-local-com-docker"
-tags = ["Tutorial", "Hadoop", "HBase", "Kafka", "Docker"]
+tags = ["Hadoop", "HBase", "Kafka", "Docker", "Tutorial"]
 title = "Configuração do Hadoop, HBase e Kafka na Máquina Local com Docker"
 +++
 

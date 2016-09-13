@@ -2,7 +2,7 @@
 date = "2015-09-24T19:44:08-03:00"
 draft = false
 slug = "otimizacao-dos-parametros-do-spark-als-collaborative-filtering-usando-moe"
-tags = ["Tutorial", "Otimização", "Sistema de Recomendação", "Algoritmos", "Spark"]
+tags = ["Otimização", "Sistema de Recomendação", "Algoritmos", "Spark", "Tutorial"]
 title = "Otimização dos parâmetros do Spark ALS (Collaborative Filtering) usando MOE"
 +++
 

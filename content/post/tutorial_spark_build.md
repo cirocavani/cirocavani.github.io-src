@@ -2,7 +2,7 @@
 date = "2015-09-11T08:10:00-03:00"
 draft = false
 slug = "compilacao-do-spark-15-com-bugfix"
-tags = ["Tutorial", "Spark"]
+tags = ["Spark", "Tutorial"]
 title = "Compilação do Spark 1.5 (com bugfix)"
 +++
 

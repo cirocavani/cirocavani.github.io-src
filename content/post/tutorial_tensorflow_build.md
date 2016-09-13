@@ -2,7 +2,7 @@
 date = "2016-09-08T22:06:49-03:00"
 draft = false
 slug = "compilacao-do-tensorflow-0.10-para-linux-com-gpu"
-tags = ["Tutorial", "TensorFlow", "Docker", "Ubuntu"]
+tags = ["TensorFlow", "Ubuntu", "Docker", "Tutorial"]
 title = "Compilação do TensorFlow 0.10 para Linux (com GPU)"
 +++
 
