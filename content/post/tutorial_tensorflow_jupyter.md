@@ -142,7 +142,7 @@ O modelo treinado nesse notebook pode ser visualizado no TensorBoard.
 >
 > Essa é a descrição de como é feita a configuração do projeto, contudo esse procedimento já está definido no comando `bin/setup-linux` (ou `bin/setup-mac`) que deve ser executado ao invés desse procedimento.
 >
-> Esse passo a passo é para ajudar a customização do Projeto.
+> Esse passo a passo é para ajudar na customização do Projeto.
 
 O procedimento de instalação consiste em:
 
@@ -214,7 +214,7 @@ https://www.tensorflow.org/versions/r0.10/get_started/os_setup.html#anaconda-ins
 
 ### Instalação do Kernel para o TensorFlow
 
-No *environment* do TensorFlow é instalado o kernel Python que possibilita a conexão a partir do Jupyter (Notebook). Isso torna possível escrever código Python que é executado dentre desse *environment* isolado.
+No *environment* do TensorFlow é instalado o kernel Python que possibilita a conexão a partir do Jupyter (Notebook). Isso torna possível escrever código Python que é executado dentro desse *environment* isolado.
 
 http://ipython.readthedocs.io/en/stable/install/kernel_install.html
 
@@ -224,7 +224,7 @@ https://pypi.python.org/pypi/ipykernel
 
 ### Configuração do Kernel para o TensorFlow
 
-O Jupyter é configurado com o comando que executa o kernel do Python dentro do *environment* que tem o TensorFlow. O kernel é responsável por receber requisições do servidor do Jupyter e executar código Python no processo em que é executado. Esse processo é executado em isolamento e pacotes adicionais devem ser instalados nesse *environment* sem conflito com outros *environments*.
+O Jupyter é configurado com o comando que executa o kernel do Python dentro do *environment* que tem o TensorFlow. O kernel é responsável por receber requisições do servidor do Jupyter e executar código Python no processo em que está executando. Esse processo é executado somente com os pacotes do próprio *environment* (isolamento) e pacotes adicionais devem ser instalados nesse *environment* sem conflito com outros *environments*.
 
 https://jupyter-client.readthedocs.io/en/latest/kernels.html#kernelspecs
 
