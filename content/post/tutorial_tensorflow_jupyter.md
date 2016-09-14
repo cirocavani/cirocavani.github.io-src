@@ -1,17 +1,23 @@
 +++
-date = "2016-09-09T21:13:26-03:00"
-draft = true
+date = "2016-09-13T21:13:26-03:00"
+draft = false
 slug = "tensorflow-no-jupyter-com-notebooks"
 tags = ["TensorFlow", "Jupyter", "Tutorial"]
 title = "TensorFlow no Jupyter (com notebooks)"
 +++
 
-Esse tutorial é sobre o TensorFlow no Jupyter.
+Esse tutorial é sobre o TensorFlow no Jupyter. A princípio, esse projeto pode ser usado para instalar automaticamente o Jupyter Notebook configurado com TensorFlow 0.10 e alguns notebooks de exemplo (tutoriais do TensorFlow). Outro objetivo é servir como base para criação de configurações customizadas isoladas (exemplo um ambiente extra para testar com TensorFlow GPU Python 3 com CUDA 8). O Jupyter é uma ferramenta excelente para testar ideias e prototipar rapidamente com TensorFlow.
 
 **Projeto**
 
 https://github.com/cirocavani/tensorflow-jupyter
 
+
+Esse artigo consiste em:
+
+1. o procedimento de instalação básico
+2. a descrição dos notebooks de exemplo
+3. a explicação de como funciona a instalação
 
 ## Instalação
 
@@ -130,10 +136,117 @@ Nesse exemplo, é feito um classificador com a combinação de uma rede neural e
 O modelo treinado nesse notebook pode ser visualizado no TensorBoard.
 
 
-## Configuração
+## Funcionamento
 
-TBD
+>IMPORTANTE:
+>
+> Essa é a descrição de como é feita a configuração do projeto, contudo esse procedimento já está definido no comando `bin/setup-linux` (ou `bin/setup-mac`) que deve ser executado ao invés desse procedimento.
+>
+> Esse passo a passo é para ajudar a customização do Projeto.
+
+O procedimento de instalação consiste em:
+
+1. Instalar o Python 2.7 com `miniconda` (Linux ou Mac)
+2. Instalar o Jupyter Notebook 4.2 no *environment* `default` do `conda2`
+3. Instalar o TensorFlow 0.10 em um *environment* próprio (para Python 2.7)
+4. Instalar o kernel do Python no *environment* do TensorFlow
+5. Configurar o kernel no Jupyter que é executado no *environment* do TensorFlow
+
+A estrutura do projeto será:
+
+* `deps/conda2`: instalação do Python 2.7 (`miniconda`)
+* `deps/tensorflow-0.10`: instalação do TensorFlow 0.10 (*environment* isolado)
+* `data/kernels/tensorflow-0.10/kernel.json`: configuração do kernel no Jupyter para o TensorFlow
+
+Ao final desse procedimento, a execução do Jupyter consiste de (`bin/jupyter`):
+
+    export JUPYTER_DATA_DIR=`pwd`/data
+    deps/conda2/bin/jupyter notebook --no-browser --notebook-dir=`pwd`/workspace
+
+Para a criação de uma customização, os passos 3, 4 e 5 devem ser ajustados para um novo *environment* com configuração customizada.
+
+
+### Instalação do Python
+
+A instalação do Python é feita usando o `miniconda` para versão 2.7 (para Linux ou Mac).
+
+Os comandos de Python e Conda ficam disponíveis na pasta `deps/conda2/bin`.
+
+http://conda.pydata.org/miniconda.html
+
+(Linux)
+
+    curl -k -L \
+        -O https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
+
+    chmod +x Miniconda2-latest-Linux-x86_64.sh
+
+    ./Miniconda2-latest-Linux-x86_64.sh -b -f -p deps/conda2
+
+
+### Instalação do Jupyter
+
+O Jupyter tem um meta pacote que depende de todos os componentes, incluindo o Notebook.
+
+O comando do Jupyter fica disponível em `deps/conda2/bin/jupyter`.
+
+http://jupyter.readthedocs.io/en/latest/install.html
+
+https://pypi.python.org/pypi/jupyter
+
+    deps/conda2/bin/pip install --upgrade jupyter
+
+
+### Instalação do TensorFlow
+
+O TensorFlow é distribuído como um pacote Wheel e é instalado em um *environment* isolado criado no `miniconda`.
+
+O comando do TensorBoard fica disponível em `deps/tensorflow-0.10/bin/tensorboard`.
+
+https://www.tensorflow.org/versions/r0.10/get_started/os_setup.html#anaconda-installation
+
+(Linux)
+
+    deps/conda2/bin/conda create -y -p deps/tensorflow-0.10 python=2.7
+
+    deps/tensorflow-0.10/bin/pip install \
+        https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0-cp27-none-linux_x86_64.whl
+
+### Instalação do Kernel para o TensorFlow
+
+No *environment* do TensorFlow é instalado o kernel Python que possibilita a conexão a partir do Jupyter (Notebook). Isso torna possível escrever código Python que é executado dentre desse *environment* isolado.
+
+http://ipython.readthedocs.io/en/stable/install/kernel_install.html
+
+https://pypi.python.org/pypi/ipykernel
+
+    deps/tensorflow-0.10/bin/pip install ipykernel
+
+### Configuração do Kernel para o TensorFlow
+
+O Jupyter é configurado com o comando que executa o kernel do Python dentro do *environment* que tem o TensorFlow. O kernel é responsável por receber requisições do servidor do Jupyter e executar código Python no processo em que é executado. Esse processo é executado em isolamento e pacotes adicionais devem ser instalados nesse *environment* sem conflito com outros *environments*.
+
+https://jupyter-client.readthedocs.io/en/latest/kernels.html#kernelspecs
+
+    mkdir -p data/kernels/tensorflow-0.10-py2
+
+    echo "{
+     \"display_name\": \"TensorFlow 0.10 (CPU, Python 2)\",
+     \"language\": \"python\",
+     \"argv\": [
+      \"`pwd`/deps/tensorflow-0.10/bin/python\",
+      \"-c\",
+      \"from ipykernel.kernelapp import main; main()\",
+      \"-f\",
+      \"{connection_file}\"
+     ]
+    }" > data/kernels/tensorflow-0.10-py2/kernel.json
+
 
 ## Conclusão
 
-TBD
+O Jupyter é uma excelente ferramenta para exploração de ideias e desenvolvimento de código rápido. A facilidade de visualização e execução independente de células é muito prático. O desenvolvimento de aplicações mais complexas e com código mais estruturado já não é muito favorável.
+
+O TensorFlow é uma ferramenta sofisticada para desenvolvimento de algoritmos inteligentes. Algumas APIs podem ser complexas e de difícil entendimento, algumas vezes bem documentadas e outras não. A comunidade é muito engajada e o Google vem produzindo tutoriais, documentação e modelos muito úteis para o aprendizado.
+
+Aprender TensorFlow no Jupyter é o melhor caminho e essa é a proposta desse Projeto.
