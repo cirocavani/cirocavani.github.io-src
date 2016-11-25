@@ -16,3 +16,11 @@ Exemplo:
     (visualiza o resultado em  http://127.0.0.1:1313/)
     (remove a configuração de draft)
     ./deploy.sh 'Novo artigo sobre ...'
+
+Tema:
+
+    cd themes/blackburn/
+    git remote add upstream https://github.com/yoshiharuyamashita/blackburn.git
+    git fetch upstream
+    git rebase upstream/master
+    git push
