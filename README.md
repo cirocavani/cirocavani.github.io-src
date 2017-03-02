@@ -6,21 +6,27 @@ Clonar o projeto:
 
 Deploy:
 
-    ./deploy.sh
+```sh
+./deploy.sh
+```
 
 Exemplo:
 
-    hugo new post/<NOME_DO_ARQUIVO>.md
-    hugo server --buildDrafts --watch
-    (edita o conteúdo em content/post/<NOME_DO_ARQUIVO>.md)
-    (visualiza o resultado em  http://127.0.0.1:1313/)
-    (remove a configuração de draft)
-    ./deploy.sh 'Novo artigo sobre ...'
+```sh
+hugo new post/<NOME_DO_ARQUIVO>.md
+hugo server --buildDrafts --watch
+#(edita o conteúdo em content/post/<NOME_DO_ARQUIVO>.md)
+#(visualiza o resultado em  http://127.0.0.1:1313/)
+#(remove a configuração de draft)
+./deploy.sh 'Novo artigo sobre ...'
+```
 
 Tema:
 
-    cd themes/blackburn/
-    git remote add upstream https://github.com/yoshiharuyamashita/blackburn.git
-    git fetch upstream
-    git rebase upstream/master
-    git push
+```sh
+cd themes/blackburn/
+git remote add upstream https://github.com/yoshiharuyamashita/blackburn.git
+git fetch upstream
+git rebase upstream/master
+git push
+```
