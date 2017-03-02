@@ -23,7 +23,7 @@ Com base nessa ideia, essa análise é uma primeira comparação entre essas dua
 
 > **IMPORTANTE**
 >
-> Essa análise foi feita com um dataset pequeno com objetivo de facilitar o desenvolvimento, portanto, os resultados obtidos são apenas para ter uma ideia e não servervem para chegar em *conclusões definitivas* sobre essas implementações.
+> Essa análise foi feita com um dataset pequeno com objetivo de facilitar o desenvolvimento, portanto, os resultados obtidos são apenas para dar uma ideia e não servem para chegar em *conclusões definitivas* sobre essas implementações.
 
 Tomei conhecimento de que o TensorFlow tinha a implementação do ALS a partir de um vídeo do [TensorFlow Dev Summit](https://events.withgoogle.com/tensorflow-dev-summit/) que ocorreu em 15/Fevereiro (WALS no tempo 2:20):
 
@@ -35,11 +35,11 @@ A ideia geral é simples:
 
 > Usuários dão rating para alguns filmes e o algoritmo gera uma lista de outros filmes que o usuário também daria um bom rating.
 >
-> O ALS é um método de fatoração de matriz que é usado para 'completar' os ratings dos filmes que o usuário não deu rating, baseado nos ratings que vários usuários deram aos filmes.
+> O ALS é um método de fatoração de matriz que é usado para 'completar' os ratings dos filmes que o usuário não avaliou, baseado nos ratings que vários usuários deram aos filmes.
 >
 > Cada usuário e filme é transformado em um vetor de números (fatores) que são ajustados para representar o interesse do usuário em uma determinada característica de um filme (cada fator é um 'peso' que indica quanto o usuário gosta e quanto o filme oferece). O produto entre os fatores do usuário e os fatores do filme tem que ser 'igual' ao rating que o usuário deu ao filme.
 >
-> No caso dos filmes que o usuário não deu rating (não viu?), esse produto é o 'rating previsto'. Ordenando todos os ratings previstos, os maiores são usados para recomendação.
+> No caso dos filmes que o usuário não deu rating (não viu?), esse produto é o 'rating estimado'. Ordenando todos os ratings estimados, os maiores são usados para recomendação.
 >
 > Esse é o algoritmo de Collaborative Filtering com ALS.
 >
@@ -70,7 +70,7 @@ Os dados usados nessa análise são do [MovieLens](https://grouplens.org/dataset
 
 ...
 
-O dataset consiste de 100.004 ratings registrados por 671 usuários em 9.066 vídeos (o número de vídeos com rating é menor que o número de vídeos com tag, 9.125). Como esperado, a matriz de usuários por vídeos é bastante esparsa: apenas 1,64% de ratings dos 6.083.286 (671 x 9.066) possíveis.
+O dataset consiste em 100.004 ratings registrados por 671 usuários em 9.066 filmes (o número de filmes com rating é menor que o número de filmes com tag, 9.125). Como esperado, a matriz de usuários por filmes é bastante esparsa: apenas 1,64% de ratings dos 6.083.286 (671 x 9.066) possíveis.
 
 > Diferente desse dataset, em que o número de usuários é bem menor que o número de itens (menor que 1/10), na recomendação da Globo.com normalmente a proporção é inversa, ou seja, muito mais usuários do que itens - nas nossas próprias análises, essa é uma característica relevante.
 
@@ -82,27 +82,27 @@ O critério usado para dividir os dados é baseado em uma especificidade de Reco
 
 Os ratings são ordenados pelo timestamp em que foram feitos. Os primeiros 80% desses ratings são designados para treinamento / validação e os últimos 20% são designados para teste. Novamente, o primeiro dataset é ordenado e dividido em 80% para treinamento e 20% para validação. A divisão, portanto, fica 64% para treinamento, 16% para validação e 20% para teste.
 
-> Uma variação desse critério: separar por tempo primeiro entre 70% treinamento e 30% validação / teste, depois separar por shuffle 15% de validação e 15% de teste. (Escolhi usar só o critério de tempo porque é mais próximo de Produção)
+> Uma variação desse critério: separar por tempo primeiro entre 70% treinamento e 30% validação / teste, depois separar por shuffle 15% de validação e 15% de teste. (Escolhi usar só o critério de tempo porque é mais próximo da dinâmica de Produção)
 
-O dataset de treinamento tem 64.002 ratings, 435 usuários e 5.668 vídeos.
+O dataset de treinamento tem 64.002 ratings, 435 usuários e 5.668 filmes.
 
-O dataset de validação tem 16.001 ratings, 136 usuários e 4.112 vídeos.
+O dataset de validação tem 16.001 ratings, 136 usuários e 4.112 filmes.
 
-O dataset de teste tem 20.001 ratings, 147 usuários e 4.753 vídeos.
+O dataset de teste tem 20.001 ratings, 147 usuários e 4.753 filmes.
 
 ...
 
-A medida de performance usada nesse análise é o RMSE ([Root Mean Square Error](https://en.wikipedia.org/wiki/Root-mean-square_error)) onde o 'erro' é a diferença entre o rating atribuído pelo usuário a um vídeo e o rating calulado pelo produto entre o vetor de fatores desse usuário e o vetor de fatores desse vídeo. O RMSE é uma medida aproximada de quanto o algoritmo pode errar a predição de rating, para mais ou para menos. A expectativa é que esse valor seja muito pequeno para o dataset de treinamento (o ALS minimiza um função similar ao RMSE).
+A medida de performance usada nessa análise é o RMSE ([Root Mean Square Error](https://en.wikipedia.org/wiki/Root-mean-square_error)) onde o 'erro' é a diferença entre o rating atribuído pelo usuário a um filme e o rating calculado pelo produto entre o vetor de fatores desse usuário e o vetor de fatores desse filme. O RMSE é uma medida aproximada de quanto o algoritmo pode errar a estimativa de rating, para mais ou para menos. A expectativa é que esse valor seja muito pequeno para o dataset de treinamento (o ALS minimiza um função similar ao RMSE).
 
-Para efeito de avaliação de performance, temos uma especificidade do ALS. Uma vez que é necessário ter o vetor de fatores tanto do usuário quanto do vídeo para estimar o rating, apenas usuários e vídeos que estão simultaneamente no dataset de treinamento e validação (ou teste) podem ser considerados para o cálculo do RMSE. Nesse caso, estamos avaliando a capacidade de predição do algoritmo e ignorando a cobertura (tanto em usuários ou vídeos).
+Para efeito de avaliação de performance, temos uma especificidade do ALS. Uma vez que é necessário ter o vetor de fatores tanto do usuário quanto do filme para estimar o rating, apenas usuários e filmes que estão simultaneamente no dataset de treinamento e validação (ou teste) podem ser considerados para o cálculo do RMSE. Nesse caso, estamos avaliando a capacidade de estimativa do algoritmo e ignorando a cobertura (tanto em usuários ou filmes).
 
 Apenas um subconjunto do dataset de validação e teste é usado para avaliação.
 
 (Todo o dataset de treinamento pode ser usado na avaliação)
 
-A avaliação com o dataset de validação tem 944 ratings, 23 usuários e 2.424 vídeos.
+A avaliação com o dataset de validação tem 944 ratings, 23 usuários e 2.424 filmes.
 
-A avaliação com o dataset de teste tem 278 ratings, 5 usuários e 2.332 vídeos.
+A avaliação com o dataset de teste tem 278 ratings, 5 usuários e 2.332 filmes.
 
 
 ## Treinamento com TensorFlow
@@ -133,21 +133,21 @@ Rascunho do algoritmo:
 
 O algoritmo é implementado em duas classes:
 
-1. `ALSRecommender`: classe responsável pelo treinamento (recebe um dataset com ratings, calcula os fatores dos usuários e vídeos com o ALS e retorna o modelo com esses fatores)
-2. `ALSRecommenderModel`: classe responsável pela inferência (recebe um par usuário e vídeo e retorna a predição do rating ou recebe um usuário e retorna os vídeos com maior rating para esse usuário)
+1. `ALSRecommender`: classe responsável pelo treinamento (recebe um dataset com ratings, calcula os fatores dos usuários e filmes com o ALS e retorna o modelo com esses fatores)
+2. `ALSRecommenderModel`: classe responsável pela inferência (recebe um par usuário e filme e retorna a estimativa do rating ou recebe um usuário e retorna os filmes com maior relevância / rating para esse usuário)
 
 
 **ALSRecommender**
 
 A classe `ALSRecommender` recebe três parâmetros:
 
-* `num_factors` (default 10): número de fatores em que cada usuário e vídeo devem ser representados (valor muito grande pode resultar em overfitting, muito pequeno em underfitting; custo computacional, tamanho da matriz de usuários e vídeos)
-* `num_iters` (default 10): número de repetições do método do ALS (a convergência normalmente é rápida, portando um número muito grande pode não ajudar muito; custo computacional)
+* `num_factors` (default 10): número de fatores em que cada usuário e filme devem ser representados (valor muito grande pode resultar em overfitting, muito pequeno em underfitting; custo computacional, tamanho da matriz de usuários e filmes)
+* `num_iters` (default 10): número de repetições do método do ALS (a convergência normalmente é rápida, portando um número muito grande pode não ter efeito; custo computacional)
 * `reg` (default 1e-1): fator de regularização (impacto na convergência, valor muito grande pode resultar em instabilidade e um valor muito pequeno pode resultar em overfitting)
 
 O treinamento é implementado no método `fit` e consiste em três passos: transformação dos dados em matriz esparsa, criação do ALS e execução do ALS.
 
-No final é retornanda uma instância do `ALSRecommenderModel` com a matriz de usuários e matriz de vídeos (itens).
+No final é retornada uma instância do `ALSRecommenderModel` com a matriz de usuários e matriz de filmes (itens).
 
 ```python
 def fit(self, dataset, verbose=False):
@@ -160,7 +160,7 @@ def fit(self, dataset, verbose=False):
         return ALSRecommenderModel(row_factor, col_factor, mapping)
 ```
 
-O primeiro passo é a transformação de uma lista de ratings em uma matriz esparsa de usuários por vídeos, implementado no método `sparse_input`:
+O primeiro passo é a transformação de uma lista de ratings em uma matriz esparsa de usuários por filmes, implementado no método `sparse_input`:
 
 ```python
 def sparse_input(self, dataset):
@@ -187,7 +187,7 @@ def als_model(self, dataset):
         unobserved_weight=0)
 ```
 
-O tercero passo é a execução do ALS em si, que consiste na repetição de dois passos: mantem a matriz de vídeos constante e altera a matriz de usuários; mantem a matriz de usuários constante e altera a matriz de vídeos. A cada passo, o erro entre os ratings do input e os ratings aproximados deve diminuir.
+O terceiro passo é a execução do ALS em si, que consiste na repetição de dois passos: mantém a matriz de filmes constante e altera a matriz de usuários; mantém a matriz de usuários constante e altera a matriz de filmes. A cada passo, o erro entre os ratings do input e os ratings aproximados deve diminuir.
 
 Execução do ALS implementada no método `train`:
 
@@ -219,15 +219,15 @@ def train(self, model, input_matrix, verbose=False):
 A classe `ALSRecommenderModel` recebe três parâmetros:
 
 * `user_factors`: matriz densa de usuários por número de fatores
-* `item_factors`: matriz densa de vídeos por número de fatores
-* `mapping`: objeto que converte `user_id` para / de índice em `user_factors`, `item_id` para / de índice em `item_factors` (vídeos)
+* `item_factors`: matriz densa de filmes por número de fatores
+* `mapping`: objeto que converte `user_id` para / de índice em `user_factors`, `item_id` para / de índice em `item_factors` (filmes)
 
 A classe `ALSRecommenderModel` implementa dois métodos:
 
-* `transform`: recebe uma lista de `(user_id, item_id)` e retorna a predição do rating
+* `transform`: recebe uma lista de `(user_id, item_id)` e retorna a estimativa do rating
 * `recommend`: recebe um `user_id` e retorna a lista de `(item_id, rating)` ordenada com os maiores ratings primeiro
 
-O método `transform` é o produto dos fatores do usuário e do vídeo:
+O método `transform` é o produto dos fatores do usuário e do filme:
 
 ```python
 def transform(self, x):
@@ -244,7 +244,7 @@ def transform(self, x):
         yield (user_id, item_id), r
 ```
 
-O método `recommend` é o produto da matriz de vídeos pelo vetor de fatores de um usuário:
+O método `recommend` é o produto da matriz de filmes pelo vetor de fatores de um usuário:
 
 ```python
 def recommend(self, user_id, num_items=10, items_exclude=set()):
@@ -491,7 +491,7 @@ n_factors=5, n_iters=5, reg=0.1, RMSE=0.981
 
 ## Comparação
 
-Para a comparação das implementações, a medida de performance é o RMSE dos ratings de avaliação do dataset de Teste com os os melhores parâmetros selecionados na busca.
+Para a comparação das implementações, a medida de performance é o RMSE calculado a partir dos ratings de avaliação do dataset de Teste, usando os melhores parâmetros selecionados na busca.
 
 O TensorFlow ALS com 5 fatores, 5 iterações e 0.001 de regularização tem RMSE de 1,183 no Teste.
 
@@ -532,6 +532,6 @@ Spark RMSE for test: 1.086
 
 ## Conclusão
 
-Apesar do resultado dessa análise ser consistente (várias execuções, pouca variação), não é definitivo. Seria necessário fazer a análise com datasets maiores e verificar se há realmente diferença significativa de performance entre essas implementação.
+Apesar do resultado dessa análise ser consistente (várias execuções, pouca variação), não é definitivo. Seria necessário fazer a análise com datasets maiores e verificar se há realmente diferença significativa de performance entre essas implementações.
 
-Para trabalhos futuros, a ideia completar o trabalho com os passos necessários para colocar esse algoritmo 'em produção', ou seja, que um sistema de recomendação possa fazer inferência com o modelo treinado com o ALS do TensorFlow. Uma forma de fazer isso é transformar a classe `ALSRecommenderModel` em um grafo do TensorFlow que possa ser carregado e executado pelo TensorFlow Serving. Esse pode ser o tema de um próximo artigo.
+Para trabalhos futuros, a ideia é completar o trabalho com os passos necessários para colocar esse algoritmo 'em produção', ou seja, que um sistema de recomendação possa fazer inferência com o modelo treinado com o ALS do TensorFlow. Uma forma de fazer isso é transformar a classe `ALSRecommenderModel` em um grafo do TensorFlow que possa ser carregado e executado pelo [TensorFlow Serving](https://tensorflow.github.io/serving/). Esse pode ser o tema de um próximo artigo.
