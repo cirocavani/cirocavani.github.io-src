@@ -1,4 +1,4 @@
-baseurl = "http://cirocavani.github.io/"
+baseurl = "https://cirocavani.github.io/"
 languageCode = "pt-br"
 title = "Ciro Cavani"
 theme = "blackburn"
