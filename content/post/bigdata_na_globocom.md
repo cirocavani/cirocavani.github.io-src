@@ -244,13 +244,7 @@ Esse artigo é a catarse de um pouco mais de 2 anos de trabalho feito pelo time 
 
 Eu gostaria de pensar no futuro, e nesse sentido, a minha expectativa é que a gente construa na Globo.com uma plataforma similar ao Google Cloud Platform.
 
-<div class="embed video-player">
-<iframe class="youtube-player" type="text/html"
-    width="640" height="385"
-    src="http://www.youtube.com/embed/Y0Z58YQSXv0"
-    allowfullscreen frameborder="0">
-</iframe>
-</div>
+{{< youtube Y0Z58YQSXv0 >}}
 
 A gente vem de um modelo em que um mesmo time faz o desenvolvimento do Sistema de Recomendação, coleta e processamento de dados, a análise e construção de modelos, e a gestão da Plataforma de BigData. A proposta é expandir cada uma dessas responsabilidade em times próprios e adicionar outros com foco em suportar novas demandas. É nesse processo que nos encontramos nesse momento.
 
