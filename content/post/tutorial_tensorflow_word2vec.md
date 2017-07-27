@@ -52,7 +52,7 @@ Esse tabalho é dividido nos tópicos:
 
 1.  [Preparação dos Dados](#preparação-dos-dados)
 
-    Transformação do dataset, uma amostra de 'texto limpo' gerado a partir da Wikipedia, no formato usado no modelo;
+    Transformação do dataset, uma amostra de 'texto limpo' gerado a partir da Wikipedia, no formato usado no modelo.
 
 2.  [Continuous Bag-of-Words (CBOW)](#continuous-bag-of-words-cbow)
 
@@ -78,7 +78,7 @@ Esse tabalho é dividido nos tópicos:
 
     Links do material em que esse trabalho foi baseado.
 
-Módulos necessário para o código presente nesse artigo:
+Módulos necessários para o código presente nesse artigo:
 
 ```python
 import collections
@@ -113,8 +113,8 @@ Para obter bons resultados com *Word Embedding* em determinados domínios, é im
 
 O processo consiste em:
 
-1. Definição do vocabulário: conjunto das palavras mais comuns, cada palavra recebe um número / índice;
-2. Transformação do texto da sequencia de palavras na sequencia de números do vocabulário;
+1. Definição do vocabulário: conjunto das palavras mais comuns, cada palavra recebe um número / índice
+2. Transformação do texto da sequencia de palavras na sequencia de números do vocabulário
 
 ...
 
@@ -360,7 +360,7 @@ O TensorFlow já tem a implementação desse cálculo na função [tf.nn.sampled
 
 Construção do modelo:
 
-Objetos do TensorFlow necessários para contrução e execução do grafo.
+Objetos do TensorFlow necessários para construção e execução do grafo.
 
 [tf.InteractiveSession](https://www.tensorflow.org/versions/r1.2/api_docs/python/tf/InteractiveSession) assume a função geral de execução, facilitando evolução incremental.
 
@@ -722,8 +722,8 @@ Avarage loss: 0.643
 
 Ao final do procedimento descrito nesse tópico, 2 resultados são produzidos:
 
-* **`input_cbow(data: List[int], batch_size: int, window_size: int) -> Generator[ndarray, ndarray]`** - função que percorre os dados criando lotes (*batches*) de entrada e saída esperada (essa função é um *[generator](https://docs.python.org/3/glossary.html#term-generator)*);
-* **`model_cbow(vocabulary_size: int, embedding_size: int, num_sampled: int) -> Tuple[Tensor, Tensor, Tensor, Tensor]`** - função que define o fluxo de transformações dos dados para cálculo do erro de predição usada no aprendizado da representação vetorial com TensorFlow.
+* **`input_cbow(data: List[int], batch_size: int, window_size: int) -> Generator[ndarray, ndarray]`** - função que percorre os dados criando lotes (*batches*) de entrada e saída esperada (essa função é um *[generator](https://docs.python.org/3/glossary.html#term-generator)*)
+* **`model_cbow(vocabulary_size: int, embedding_size: int, num_sampled: int) -> Tuple[Tensor, Tensor, Tensor, Tensor]`** - função que define o fluxo de transformações dos dados para cálculo do erro de predição usada no aprendizado da representação vetorial com TensorFlow
 
 Na sequencia, o mesmo procedimento é feito para o segundo modelo do Word2vec, Skip-gram.
 
@@ -1223,8 +1223,8 @@ Avarage loss: 0.816
 
 Ao final do procedimento descrito nesse tópico, 2 resultados são produzidos:
 
-* **`input_skip_gram(data: List[int], batch_size: int, window_size: int, num_skips: int) -> Generator[ndarray, ndarray]`** - função que percorre os dados criando lotes (*batches*) de entrada e saída esperada (essa função é um *[generator](https://docs.python.org/3/glossary.html#term-generator)*);
-* **`model_skip_gram(vocabulary_size: int, embedding_size: int, num_sampled: int) -> Tuple[Tensor, Tensor, Tensor, Tensor]`** - função que define o fluxo de transformações dos dados para cálculo do erro de predição usada no aprendizado da representação vetorial com TensorFlow.
+* **`input_skip_gram(data: List[int], batch_size: int, window_size: int, num_skips: int) -> Generator[ndarray, ndarray]`** - função que percorre os dados criando lotes (*batches*) de entrada e saída esperada (essa função é um *[generator](https://docs.python.org/3/glossary.html#term-generator)*)
+* **`model_skip_gram(vocabulary_size: int, embedding_size: int, num_sampled: int) -> Tuple[Tensor, Tensor, Tensor, Tensor]`** - função que define o fluxo de transformações dos dados para cálculo do erro de predição usada no aprendizado da representação vetorial com TensorFlow
 
 Na sequencia, o código necessário para consulta de palavras similares usando a representação vetorial é desenvolvido.
 
@@ -1509,7 +1509,7 @@ O treinamento consiste em construir um grafo de operações que calcula uma fun�
 Mais sobre funcionalidades de treinamento com TensorFlow [aqui](https://www.tensorflow.org/versions/r1.2/api_guides/python/train).
 
 
-No caso do Word2vec, a função objetivo é o erro de predição de palavras modelada como uma classificação Softmax sobre todas as palavras possíveis (classes). Para diminuir o custo computacional dessa função objetivo, é usado amostras das classes para calcular o erro aproximado.
+No caso do Word2vec, a função objetivo é o erro de predição de palavras modelada como uma classificação Softmax sobre todas as palavras possíveis (classes). Para diminuir o custo computacional dessa função objetivo, é usada amostra das classes para calcular o erro aproximado.
 
 O algoritmo de otimização usado é o [Adagrad](https://www.tensorflow.org/versions/r1.2/api_docs/python/tf/train/AdagradOptimizer). Os resultados mostram que tem um bom custo-benefício nos modelos do NLP, Word2vec em particular.
 
@@ -1580,13 +1580,13 @@ def save_embeddings(file, embeddings):
             f.write('\n')
 ```
 
-Na sequencia, essas duas funções são usadas para aprender a representação vetorial das palavras com os dois modelos do Word2vec.
+Na sequencia, essas funções são usadas no aprendizado da representação vetorial das palavras com os dois modelos do Word2vec.
 
 ...
 
 **Treinamento**
 
-Para se ter uma 'percepção qualitativa' do resultado, é amostrado 8 palavras do intervalo das 1000 mais comuns - no final de cada época, essa amostra é usada para gerar a lista de similaridade. Essa lista pode ser observada para ver como o aprendizado evolui.
+Para se ter uma 'percepção qualitativa' do resultado, são amostradas 8 palavras do intervalo das 1000 mais comuns - no final de cada época, essa amostra é usada para gerar a lista de similaridade. Essa lista pode ser observada para ver como o aprendizado evolui.
 
 > Essa é uma amostra aleatória e vai ser diferente a acada execução.
 
@@ -1843,8 +1843,8 @@ Visualização da representação vetorial do Skip-gram:
 
 Ao final do procedimento descrito nesse tópico, 2 resultados são produzidos:
 
-* **`word2vec/{cbow.txt,skip_gram.txt}``** - um arquivo por modelo com a representação vetorial das palavras (formato texto de fácil leitura independente de linguagem ou framework);
-* **`word2vec/{cbow,skip_gram}`** - uma pasta por modelo do *checkpoint** com os resultados do treinamento, podem ser usados para análises e novas iterações do treinamento.
+* **`word2vec/{cbow.txt,skip_gram.txt}``** - um arquivo por modelo com a representação vetorial das palavras (formato texto de fácil leitura independente de linguagem ou framework)
+* **`word2vec/{cbow,skip_gram}`** - uma pasta por modelo do *checkpoint** com os resultados do treinamento, podem ser usados para análises e novas iterações do treinamento
 
 Esse é o resultado final desse trabalho.
 
