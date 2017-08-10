@@ -74,7 +74,7 @@ O dataset consiste em 100.004 ratings registrados por 671 usuários em 9.066 fil
 
 > Diferente desse dataset, em que o número de usuários é bem menor que o número de itens (menor que 1/10), na recomendação da Globo.com normalmente a proporção é inversa, ou seja, muito mais usuários do que itens - nas nossas próprias análises, essa é uma característica relevante.
 
-Esse dataset é bastante pequeno e serve ao propósito de desenvolvido da análise e não para encontrar 'grandes verdades'.
+Esse dataset é bastante pequeno e serve ao propósito de desenvolvimento da análise e não para encontrar 'grandes verdades'.
 
 A estratégia é dividir esses dados para treinamento, validação e teste. O dataset de treinamento será usado como os dados que o algoritmo conhece do usuário (e deve aprender sobre). O dataset de validação é para ser usado durante o treinamento para medir a performance do algoritmo, verificar overfitting (ou under) e fazer tuning de parâmetros. O dataset de teste será usado uma única vez para medir o desempenho final do algoritmo com os melhores parâmetros.
 

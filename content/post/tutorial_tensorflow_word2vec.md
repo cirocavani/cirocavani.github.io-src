@@ -36,6 +36,7 @@ Uma das características mais interessantes de *Deep Learning* é a composição
 
 Nesse artigo, o objetivo é explorar o par de modelos do Word2vec introduzido no paper *[Efficient Estimation of Word Representations in Vector Space](https://arxiv.org/abs/1301.3781)*. Em artigos futuros, a ideia é explorar variações desses modelos e fazer uso da técnica de *Word Embedding* em arquiteturas mais complexas de *Deep Learning*.
 
+
 ## Introdução
 
 (veja as [referências](#referências) para o equacionamento do modelo probabilístico, Aula de Stanford tem mais detalhes)
@@ -92,6 +93,7 @@ import numpy as np
 
 tf.logging.set_verbosity(tf.logging.ERROR)
 ```
+
 
 ## Preparação dos Dados
 
@@ -722,7 +724,7 @@ Avarage loss: 0.643
 
 Ao final do procedimento descrito nesse tópico, 2 resultados são produzidos:
 
-* **`input_cbow(data: List[int], batch_size: int, window_size: int) -> Generator[ndarray, ndarray]`** - função que percorre os dados criando lotes (*batches*) de entrada e saída esperada (essa função é um *[generator](https://docs.python.org/3/glossary.html#term-generator)*)
+* **`input_cbow(data: List[int], batch_size: int, window_size: int) -> Iterable[Tutple[ndarray, ndarray]]`** - função que percorre os dados criando lotes (*batches*) de entrada e saída esperada (essa função é um *[generator](https://docs.python.org/3/glossary.html#term-generator)*)
 * **`model_cbow(vocabulary_size: int, embedding_size: int, num_sampled: int) -> Tuple[Tensor, Tensor, Tensor, Tensor]`** - função que define o fluxo de transformações dos dados para cálculo do erro de predição usada no aprendizado da representação vetorial com TensorFlow
 
 Na sequencia, o mesmo procedimento é feito para o segundo modelo do Word2vec, Skip-gram.
@@ -794,7 +796,7 @@ Então:
 
 4.  Número de lotes por época é (no código, **`num_batches`**):
 
-    `$ t = \lfloor p * s / m \rfloor $`
+    `$ t = \lfloor p \cdot s / m \rfloor $`
 
     (cada janela tem `$s$` exemplos, até `$m-1$` exemplos do final podem não fazer parte de um batch)
 
@@ -1223,7 +1225,7 @@ Avarage loss: 0.816
 
 Ao final do procedimento descrito nesse tópico, 2 resultados são produzidos:
 
-* **`input_skip_gram(data: List[int], batch_size: int, window_size: int, num_skips: int) -> Generator[ndarray, ndarray]`** - função que percorre os dados criando lotes (*batches*) de entrada e saída esperada (essa função é um *[generator](https://docs.python.org/3/glossary.html#term-generator)*)
+* **`input_skip_gram(data: List[int], batch_size: int, window_size: int, num_skips: int) -> Iterable[Tuple[ndarray, ndarray]]`** - função que percorre os dados criando lotes (*batches*) de entrada e saída esperada (essa função é um *[generator](https://docs.python.org/3/glossary.html#term-generator)*)
 * **`model_skip_gram(vocabulary_size: int, embedding_size: int, num_sampled: int) -> Tuple[Tensor, Tensor, Tensor, Tensor]`** - função que define o fluxo de transformações dos dados para cálculo do erro de predição usada no aprendizado da representação vetorial com TensorFlow
 
 Na sequencia, o código necessário para consulta de palavras similares usando a representação vetorial é desenvolvido.
@@ -1499,7 +1501,7 @@ Ao final do procedimento descrito nesse tópico, 1 resultado é produzido:
 
 * **`NearestWordsQuery(word_from_id: Dict[int, str], words: List[int], k:int)`** - classe que lista palavras similares às palavras em **`words`** usando similaridade por Cosseno.
 
-Na sequencia, é mostrado os experimentos com ambos os modelos do Word2vec e a aplicação de palavras similares.
+Na sequencia, são mostrados os experimentos com ambos os modelos do Word2vec e a aplicação de palavras similares.
 
 
 ## Experimentos
@@ -1763,7 +1765,7 @@ Wall time: 14min 7s
 ```
 
 
-Em ambos os modelos, os resultados interessantes, como a palavra **`writer`** próxima de **`author`** e **`poet`** e a palavra **`seven`** próxima de **`five`** e **`eight`**. O erro médio é decrescente que é o esperado (contudo, não é possível avaliar). Existe uma diferença significativa entre os tempos de execução, mas isso ocorre porque em ambos os casos, o treinamento é feito para uma época completa e a época do Skip-gram tem o dobro de exemplos da época do CBOW (o primeiro tem `num_windows * num_skips` e o segundo só `num_windows`, onde `num_windows` é igual e `num_skips` é 2).
+Em ambos os modelos, os resultados são interessantes, como a palavra **`writer`** próxima de **`author`** e **`poet`** e a palavra **`seven`** próxima de **`five`** e **`eight`**. O erro médio é decrescente que é o esperado (contudo, não é possível avaliar). Existe uma diferença significativa entre os tempos de execução, mas isso ocorre porque em ambos os casos, o treinamento é feito para uma época completa e a época do Skip-gram tem o dobro de exemplos da época do CBOW (o primeiro tem `num_windows * num_skips` e o segundo só `num_windows`, onde `num_windows` é igual e `num_skips` é 2).
 
 Na prática, seria necessário definir métricas qualitativas mensuráveis e um plano de treinamento mais elaborado para orientar o *tuning* dos parâmetros do modelo (como o **`embedding_size`**), fazer análise de *overfitting* e introduzir regularização. Esse é o trabalho mais importante da aplicação de Machine Learning em uma tarefa real, contudo, vai além da proposta desse trabalho (implementação do modelo com TensorFlow). Para o uso real do Word2vec, é necessário tratar essa 'omissão'.
 
@@ -1779,11 +1781,11 @@ Para o TensorBoard funcionar, é necessário adicionar as operações de monitor
 
 Durante o treinamento, o objeto [MonitoredTrainingSession](https://www.tensorflow.org/versions/r1.2/api_docs/python/tf/train/MonitoredTrainingSession) já faz o trabalho de agregar todas as operações de monitoramento e salvar junto com o *checkpoint* das variáveis do  modelo. O intervalo é configurável e por *default* ocorre a cada 100 passos (definido pela variável do grafo **`global_step`**).
 
-Ao usar a função [tf.contrib.layers.optimize_loss](https://www.tensorflow.org/versions/r1.2/api_docs/python/tf/contrib/layers/optimize_loss), já é adicionado o monitoramento do valor escalar do erro ('loss') que pode ser visualizado no TensorBoard.
+Ao usar a função [tf.contrib.layers.optimize_loss](https://www.tensorflow.org/versions/r1.2/api_docs/python/tf/contrib/layers/optimize_loss), já é adicionado o monitoramento do valor escalar do erro (**`OptimizeLoss/loss`**) que pode ser visualizado no TensorBoard.
 
 Ao salvar os resultados do monitoramento, a [visualização do grafo](https://www.tensorflow.org/versions/r1.2/get_started/graph_viz) também fica disponível no TensorBoard.
 
-Com o checkpoint do modelo e os metadados do grafo, é possível usar a [visualização de embeddings](https://www.tensorflow.org/versions/r1.2/get_started/embedding_viz) do TensorBoard usando redução de dimensão com PCA ou t-SNE.
+Com o *checkpoint* do modelo e os metadados do grafo, é possível usar a [visualização de embeddings](https://www.tensorflow.org/versions/r1.2/get_started/embedding_viz) do TensorBoard usando redução de dimensão com PCA ou t-SNE.
 
 Para usar o TensorBoard é necessário executar o servidor no console e acessar pelo navegador:
 
@@ -1815,7 +1817,7 @@ Medida do Erro no treinamento do Skip-Gram:
 
 No menu superior, selecionando-se a opção **`GRAPHS`** é possível visualizar a representação visual do modelo de treinamento. No lado esquerdo, parte superior tem um seletor **`Run`** para escolher qual grafo visualizar. Essa visualização é interativa, permitindo visualizar parâmetros, fazer zoom, visualizar dentro dos blocos; vale a pena explorar.
 
-Segue a imagem gerada pela comando **`Download PNG`** selecionando-se um treinamento por vez.
+Segue a imagem gerada pelo comando **`Download PNG`** selecionando-se um treinamento por vez.
 
 Grafo do treinamento do CBOW:
 
@@ -1827,7 +1829,7 @@ Grafo do treinamento do Skip-Gram:
 
 No menu superior, selecionando-se a opção **`EMBEDDINGS`** é possível visualizar a representação vetorial aprendida pelo modelo. No lado esquerdo, parte superior tem dois seletores, o primeiro permite a escolha do treinamento e o segundo a escolha do tensor a ser visualizado. Abaixo dos seletores, tem o comando **`Load data`** que pode ser usado para carregar o aquivo **`vocabulary.txt`** gerado na [Preparação dos Dados](#preparação-dos-dados). Essa visualização é interativa, permitindo visualizar as palavras mais próximas, separar uma região, fazer zoom; vale a pena explorar.
 
-A primeira imagem é a captura da tela com a seleção do treinamento do CBOW e do tensor **`embeddings`**, com os carregamento dos dados do arquivo **`vocabulary.txt`** e selecionando a palavra **`societies`** no seletor da direita, parte superior.
+A primeira imagem é a captura da tela com a seleção do treinamento do CBOW e do tensor **`embeddings`**, com o carregamento dos dados do arquivo **`vocabulary.txt`** e buscando a palavra **`societies`** no seletor da direita, parte superior.
 
 A segunda imagem é a mesma configuração com o treinamento do Skip-gram.
 
@@ -1844,7 +1846,7 @@ Visualização da representação vetorial do Skip-gram:
 Ao final do procedimento descrito nesse tópico, 2 resultados são produzidos:
 
 * **`word2vec/{cbow.txt,skip_gram.txt}``** - um arquivo por modelo com a representação vetorial das palavras (formato texto de fácil leitura independente de linguagem ou framework)
-* **`word2vec/{cbow,skip_gram}`** - uma pasta por modelo do *checkpoint** com os resultados do treinamento, podem ser usados para análises e novas iterações do treinamento
+* **`word2vec/{cbow,skip_gram}`** - uma pasta por modelo do *checkpoint* com os resultados do treinamento, podem ser usados para análises e novas iterações do treinamento
 
 Esse é o resultado final desse trabalho.
 
